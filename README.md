@@ -9,7 +9,8 @@ and a base stat total (BST).
 The program lets users explore the database through a repeating console menu.
 PokemonDriver reads the user's choices, DBAPI queries the database, and
 Pokemon formats the results for display. Users can search repeatedly before
-choosing to exit.
+choosing to exit. A JavaFX desktop interface, `PokemonGUI`, provides the same six
+searches with an AtlantaFX theme, sortable results, and a detailed stat panel.
 
 The API can answer the following questions:
 
@@ -142,6 +143,106 @@ Goodbye!
 ## 3. AI Usage Statement
 
 I used ChatGPT Codex to help write SQL queries and refactor repeated database query code into a single reusable function. I reviewed the generated code and tested the queries through the program’s menu to check that they returned the expected Pokémon.
+
+## Website Version
+
+A standalone browser version is available in `web/dist/`. It includes all six
+search operations, the same Pokemon dataset, sortable and paginated results,
+stat details, responsive layouts, and light/dark themes.
+
+Upload the contents of `web/dist/` to a folder on your website, or extract
+`web/pokemon-explorer.zip` into that folder. You can preview it by opening
+`web/dist/index.html` locally. See [the web README](web/README.md) for instructions.
+
+The website performs searches in JavaScript against a bundled copy of
+`data/pokemon.tsv`. It needs no Java or database server and runs independently
+of the Java assignment's `DBAPI` and SQLite database.
+
+## Desktop GUI
+
+The desktop app uses [JavaFX](https://openjfx.io/) and the
+[AtlantaFX](https://github.com/mkpaz/atlantafx) theme library. It includes all six
+database searches, type badges, a sortable results table, base-stat bars, input
+validation, and a light/dark theme toggle. Selecting a result displays its full
+information in the detail panel. Searches run in the background to keep the
+window responsive.
+
+![Pokemon Explorer desktop interface](docs/pokemon-explorer.png)
+
+To launch on Windows, macOS, or Linux, **double-click `LaunchPokemon.jar`** in
+the project root. Keep it beside `pom.xml` and the `src` folder; it locates the
+project even when launched from a different working directory. Your computer
+must have Java installed and associate `.jar` files with Java. If double-clicking
+opens an archive manager instead, choose **Open With > Java**, or run:
+
+```sh
+java -jar LaunchPokemon.jar
+```
+
+`LaunchPokemon.java` contains the launcher's source. It detects the operating
+system, finds an installed JDK 17+ (including common VS Code, Windows, macOS,
+Homebrew, and Linux locations), reuses or downloads Maven, and builds and opens
+the GUI. Maven downloads are checked against their SHA-512 checksum. Dependencies
+are cached in `.tools` for later runs. The launcher itself supports Java 8+, but
+the application still requires an installed JDK 17+. It does not install Java.
+The first launch requires internet access and may take a few minutes.
+
+Build output is saved to `.tools/launcher.log`. If launching fails without a
+terminal, the launcher attempts to open that log in your default text editor.
+To check environment detection or compile without opening the GUI:
+
+```sh
+java -jar LaunchPokemon.jar --check
+java -jar LaunchPokemon.jar --build-only
+```
+
+With JDK 17+ selected, you can also run the Java source directly:
+
+```sh
+java LaunchPokemon.java
+```
+
+After editing the launcher, rebuild the clickable JAR with a JDK 17+:
+
+```sh
+javac --release 8 -encoding UTF-8 -d target/launcher LaunchPokemon.java
+jar cfe LaunchPokemon.jar LaunchPokemon -C target/launcher .
+```
+
+The original Windows PowerShell launcher is also available:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\launch-gui.ps1
+```
+
+The launcher finds a JDK (Java 17 or newer), including the JDK bundled with the
+VS Code Java extension. It downloads Maven and the GUI libraries on the first
+run, builds the project, and opens the window. Later runs reuse the cached files
+in `.tools`. A JDK must already be installed; if it cannot be found, set
+`JAVA_HOME` to its installation directory. The first run requires internet access.
+
+To compile without opening the window:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\launch-gui.ps1 -BuildOnly
+```
+
+With Java 17+ and Maven already configured, the cross-platform alternative is:
+
+```sh
+mvn compile javafx:run
+```
+
+Run from the project root so `pokemon.db` can be found. If the database is
+missing, create it using the existing `CreateDB` instructions below. The console
+interface remains available through `PokemonDriver`.
+
+Build and run the console interface without the GUI dependencies:
+
+```powershell
+javac -encoding UTF-8 -d bin src/Pokemon.java src/DBAPI.java src/PokemonDriver.java
+java --enable-native-access=ALL-UNNAMED -cp "bin;lib/*" PokemonDriver
+```
 
 ## Development Notes
 

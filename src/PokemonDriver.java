@@ -83,6 +83,8 @@ public class PokemonDriver {
                 System.out.println("Please enter a whole number for numeric searches.");
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
             }
         } while (!choice.equals("0") && !choice.equalsIgnoreCase("exit"));
 

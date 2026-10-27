@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore 1,025 Pokemon through Generation IX. Search by type, generation, name, Pokedex number, and base stats.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#173f37">
+  <title>Pokemon Explorer | Your field guide</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./pokemon-data.js" defer></script>
+  <script src="./api.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#search-mode">Skip to search</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 13a9 9 0 0 1-10-10 9 9 0 1 0 10 10Z"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Pokemon Explorer home">
+        <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="22" fill="currentColor"/>
+          <path d="M2 24h44" stroke="white" stroke-width="3"/>
+          <circle cx="24" cy="24" r="8" fill="white"/>
+          <circle cx="24" cy="24" r="4" fill="currentColor"/>
+        </svg>
+        <span><strong>Pokemon Explorer</strong><small>A field guide for the curious</small></span>
+      </a>
+      <button id="theme-toggle" class="button button-quiet" type="button" aria-pressed="false">
+        <svg class="icon" aria-hidden="true"><use href="#icon-moon"/></svg>
+        <span id="theme-label">Dark mode</span>
+      </button>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">THE NATIONAL POKEDEX</p>
+        <h1 id="hero-title">Big world.<br class="mobile-break"> Small discoveries.</h1>
+        <p class="hero-description">Find a favorite, explore a type, or follow the stats.</p>
+      </div>
+      <div class="hero-metrics" aria-label="Dataset coverage">
+        <div><strong id="species-total">1,025</strong><span>SPECIES TO DISCOVER</span></div>
+        <span class="metric-divider"></span>
+        <div><strong>9</strong><span>GENERATIONS</span></div>
+      </div>
+      <svg class="hero-watermark" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="87"/><path d="M13 100h174"/><circle cx="100" cy="100" r="28"/>
+      </svg>
+    </section>
+
+    <noscript><p class="notice">Enable JavaScript to search the Pokemon dataset.</p></noscript>
+
+    <main class="workspace">
+      <aside class="card search-card" aria-labelledby="search-title">
+        <div class="card-heading"><p class="eyebrow">MAKE A DISCOVERY</p><h2 id="search-title">Find Pokemon</h2></div>
+        <form id="search-form" novalidate>
+          <div class="field">
+            <label for="search-mode">Search by</label>
+            <select id="search-mode" name="mode">
+              <option value="type">Type</option>
+              <option value="generation">Generation</option>
+              <option value="name">Name</option>
+              <option value="id">Pokedex number</option>
+              <option value="bst">Base stat total</option>
+              <option value="stat">Individual stat</option>
+            </select>
+          </div>
+          <div class="field" id="type-field">
+            <label for="type-input">Pokemon type</label>
+            <select id="type-input" name="type">
+              <option>Normal</option><option selected>Fire</option><option>Water</option><option>Electric</option>
+              <option>Grass</option><option>Ice</option><option>Fighting</option><option>Poison</option>
+              <option>Ground</option><option>Flying</option><option>Psychic</option><option>Bug</option>
+              <option>Rock</option><option>Ghost</option><option>Dragon</option><option>Dark</option>
+              <option>Steel</option><option>Fairy</option>
+            </select>
+          </div>
+          <div class="field" id="generation-field" hidden>
+            <label for="generation-input">Generation</label>
+            <select id="generation-input" name="generation">
+              <option value="1">I - Kanto</option><option value="2">II - Johto</option>
+              <option value="3">III - Hoenn</option><option value="4">IV - Sinnoh</option>
+              <option value="5">V - Unova</option><option value="6">VI - Kalos</option>
+              <option value="7">VII - Alola</option><option value="8">VIII - Galar</option>
+              <option value="9">IX - Paldea</option>
+            </select>
+          </div>
+          <div class="field" id="stat-field" hidden>
+            <label for="stat-input">Stat</label>
+            <select id="stat-input" name="stat">
+              <option value="hp">HP</option><option value="attack">Attack</option><option value="defense">Defense</option>
+              <option value="special_attack">Special Attack</option><option value="special_defense">Special Defense</option>
+              <option value="speed">Speed</option>
+            </select>
+          </div>
+          <div class="field" id="value-field" hidden>
+            <label for="value-input" id="value-label">Full Pokemon name</label>
+            <input id="value-input" name="value" type="text" autocomplete="off" maxlength="100" aria-describedby="query-hint form-error">
+          </div>
+          <p id="query-hint" class="helper-text">Matches either primary or secondary type.</p>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+          <button class="button button-primary" type="submit" id="search-button">
+            <svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg>Search Pokemon
+          </button>
+          <button class="button button-secondary" type="button" id="reset-button">
+            <svg class="icon" aria-hidden="true"><use href="#icon-reset"/></svg>Reset search
+          </button>
+        </form>
+        <div class="search-tip"><span class="tip-mark" aria-hidden="true">i</span><p><strong>A little tip</strong>Names ignore case. Stat searches find values strictly above your number.</p></div>
+        <div class="dataset-note"><span class="status-dot" aria-hidden="true"></span>Bundled dataset &middot; Generations I-IX</div>
+      </aside>
+
+      <section class="card results-card" aria-labelledby="results-title">
+        <div class="results-heading"><h2 id="results-title">Your discoveries</h2><span id="result-count" class="count-badge">Loading</span></div>
+        <p id="result-summary" class="muted">Opening your field guide...</p>
+        <div class="table-container" id="table-container" tabindex="0" role="region" aria-label="Pokemon search results; scroll horizontally on small screens">
+          <table id="results-table">
+            <caption class="sr-only">Matching Pokemon. Select a Pokemon name to show its details. Use column buttons to sort.</caption>
+            <thead><tr>
+              <th scope="col" data-column="id" aria-sort="ascending"><button type="button" data-sort="id" aria-label="Sort by Pokedex number">#<span class="sort-indicator" aria-hidden="true"></span></button></th>
+              <th scope="col" data-column="name"><button type="button" data-sort="name" aria-label="Sort by name">Pokemon<span class="sort-indicator" aria-hidden="true"></span></button></th>
+              <th scope="col" data-column="types"><button type="button" data-sort="types" aria-label="Sort by type">Type<span class="sort-indicator" aria-hidden="true"></span></button></th>
+              <th scope="col" data-column="generation"><button type="button" data-sort="generation" aria-label="Sort by generation">Gen.<span class="sort-indicator" aria-hidden="true"></span></button></th>
+              <th scope="col" data-column="stat_total"><button type="button" data-sort="stat_total" aria-label="Sort by base stat total">BST<span class="sort-indicator" aria-hidden="true"></span></button></th>
+            </tr></thead>
+            <tbody id="results-body"></tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="empty-state" hidden>
+          <svg class="empty-icon icon" aria-hidden="true"><use href="#icon-search"/></svg>
+          <h3 id="empty-title">No Pokemon found</h3>
+          <p id="empty-message">Try another name, type, or lower stat threshold.</p>
+        </div>
+        <div class="results-footer">
+          <p id="page-summary" class="helper-text"></p>
+          <nav class="pagination" aria-label="Results pages">
+            <button id="previous-page" class="button page-button" type="button" aria-label="Previous results page"><svg class="icon rotate" aria-hidden="true"><use href="#icon-chevron"/></svg></button>
+            <span id="page-number" class="helper-text">1 / 1</span>
+            <button id="next-page" class="button page-button" type="button" aria-label="Next results page"><svg class="icon" aria-hidden="true"><use href="#icon-chevron"/></svg></button>
+          </nav>
+        </div>
+      </section>
+
+      <aside class="card detail-card" id="detail-panel" aria-labelledby="detail-heading">
+        <p class="eyebrow">IN THE SPOTLIGHT</p>
+        <div id="detail-empty"><h2 id="detail-heading">Get to know a Pokemon</h2><p class="muted">Select a result to explore its types and base stats.</p></div>
+        <div id="detail-content" hidden>
+          <div class="specimen-mark" aria-hidden="true"><span id="specimen-number">004</span><span class="specimen-orbit"></span></div>
+          <p id="detail-number" class="dex-label"></p>
+          <h2 id="detail-name"></h2>
+          <div id="detail-types" class="type-badges"></div>
+          <p id="detail-generation" class="muted generation-label"></p>
+          <div class="section-divider"><span>BASE STATS</span><span>MAX 255</span></div>
+          <dl id="detail-stats" class="stat-list"></dl>
+          <div class="bst-box"><span>Base stat total</span><strong id="detail-total"></strong></div>
+          <p class="detail-note">Base stats for the species' default form.</p>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="site-footer"><p id="status" role="status" aria-live="polite">Loading the local dataset...</p><p>A FIELD GUIDE FOR THE CURIOUS <span aria-hidden="true">/</span> GEN I-IX</p></footer>
+  </div>
+</body>
+</html>

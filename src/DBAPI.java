@@ -3,6 +3,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -105,8 +107,12 @@ public class DBAPI {
      * @param sql - the SQL query containing placeholders for the parameters
      * @param parameters - the values to bind to the placeholders in order
      * @return - An ArrayList<Pokemon> containing the pokemon read from the query results
+     * @throws IllegalStateException - if the database is missing or the query fails
      */
     private static ArrayList<Pokemon> queryPokemon(String sql, Object... parameters) {
+        if (!Files.isRegularFile(Path.of("pokemon.db"))) {
+            throw new IllegalStateException("pokemon.db was not found. Run CreateDB from the project root first.");
+        }
         ArrayList<Pokemon> response = new ArrayList<Pokemon>();
 
         try (Connection connection = DriverManager.getConnection(DB_URL);
@@ -120,7 +126,7 @@ public class DBAPI {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new IllegalStateException("Could not read pokemon.db: " + e.getMessage(), e);
         }
 
         return response;
