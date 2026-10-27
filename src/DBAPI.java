@@ -6,15 +6,20 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * Searches the SQLite Pokémon database in the current working directory.
+ */
 public class DBAPI {
 
+    /** SQLite connection URL, resolved relative to the working directory. */
     final static String DB_URL = "jdbc:sqlite:pokemon.db";
     
     /**
      * This function accepts a ResultSet and returns a Pokemon from data within the ResultSet
      * @param rs - a ResultSet that contains all the information needed to generate a pokemon object.
      * @return - A Pokemon object generated from the ResultSet
-     * @throws SQLException
+     * The caller must position the cursor on a row before calling this method.
+     * @throws SQLException if the current row or a required column cannot be read
      */
     public static Pokemon getPokemonInfo(ResultSet rs) throws SQLException {
         Pokemon pokemon = new Pokemon(
@@ -87,6 +92,7 @@ public class DBAPI {
             throw new IllegalArgumentException("Stat name must not be null");
         }
         String column = stat.trim().toLowerCase(Locale.ROOT).replace(' ', '_');
+        // Only allow known column names; SQL placeholders bind values, not identifiers.
         switch (column) {
             case "hp":
             case "attack":

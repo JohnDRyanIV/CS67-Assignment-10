@@ -53,7 +53,14 @@ public class CreateDB {
                 stat_total = excluded.stat_total
             """;
 
-    /** Run from the project root; optionally supply a database path and a data path. */
+    /**
+     * Runs the offline import; run from the project root to use the default paths.
+     * @param args optional database path (default pokemon.db), followed by the TSV
+     *             data path (default data/pokemon.tsv)
+     * @throws IOException if the data cannot be read or has an invalid format
+     * @throws SQLException if the database cannot be opened or updated
+     * @throws IllegalArgumentException if more than two arguments are supplied
+     */
     public static void main(String[] args) throws IOException, SQLException {
         if (args.length > 2) {
             throw new IllegalArgumentException("Usage: CreateDB [database-file] [pokemon-tsv-file]");
@@ -64,7 +71,18 @@ public class CreateDB {
         System.out.println("Loaded " + count + " Pokémon into " + database.toAbsolutePath());
     }
 
-    /** Inserts or updates all bundled species atomically, without any network access. */
+    /**
+     * Inserts or updates species from a UTF-8 TSV file in one transaction.
+     * Creates the table if needed and retains existing species absent from the file.
+     * An empty secondary-type field is stored as SQL NULL. Import failures roll back
+     * the transaction, including table creation, without committing partial data.
+     * @param database the destination SQLite database path
+     * @param data the TSV file with the expected header and twelve fields per row
+     * @return the number of data rows processed, including updates to existing species
+     * @throws IOException if reading fails, the header or field count is invalid,
+     *                     a numeric field cannot be parsed, or no data rows exist
+     * @throws SQLException if a database operation or constraint check fails
+     */
     public static int createDatabase(Path database, Path data) throws IOException, SQLException {
         try (BufferedReader reader = Files.newBufferedReader(data, StandardCharsets.UTF_8)) {
             if (!HEADER.equals(reader.readLine())) {

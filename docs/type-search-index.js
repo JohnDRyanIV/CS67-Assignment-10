@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"DBAPI"},{"p":"<Unnamed>","l":"Pokemon"},{"p":"<Unnamed>","l":"PokemonDriver"}];updateSearchResults();

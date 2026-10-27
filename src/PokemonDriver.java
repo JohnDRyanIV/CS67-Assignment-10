@@ -1,8 +1,14 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/** Provides an interactive console menu for searching the local Pokémon database. */
 public class PokemonDriver {
 
+    /**
+     * Repeats searches until the user enters 0 or exit, ignoring case for exit.
+     * Prints full details for up to five matches and short entries for larger results.
+     * Invalid numeric input and unsupported stat names are reported before retrying.
+     */
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         String choice; // user input
@@ -19,8 +25,6 @@ public class PokemonDriver {
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
             choice = input.nextLine().trim();
-
-
 
             try {
                 switch (choice.toLowerCase()) {
