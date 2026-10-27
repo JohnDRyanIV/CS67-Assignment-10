@@ -2,6 +2,7 @@ public class Pokemon {
 
     private int id;
     private String name;
+    private int generation;
     private String primaryType;
     private String secondaryType;
     private int hp;
@@ -12,11 +13,10 @@ public class Pokemon {
     private int speed;
     private int statTotal;
 
-    
-
-    public Pokemon(int id, String name, String primaryType, String secondaryType, int hp, int atk, int def, int spatk, int spdef, int speed) {
+    public Pokemon(int id, String name, int generation, String primaryType, String secondaryType, int hp, int atk, int def, int spatk, int spdef, int speed) {
         setId(id);
         setName(name);
+        setGeneration(generation);
         setPrimaryType(primaryType);
         setSecondaryType(secondaryType);
         setHp(hp);
@@ -28,6 +28,63 @@ public class Pokemon {
 
         setStatTotal();
     }
+
+
+    
+
+    /**
+     * This function returns a human readable message detailing the pokemon's information
+     * @return - A formatted String containing the pokemon's identity, types, and stats
+     */
+    public String toPrint() {
+        String types = getPrimaryType();
+        if (getSecondaryType() != null && !getSecondaryType().trim().isEmpty()) {
+            types += " / " + getSecondaryType();
+        }
+
+        return String.format(
+                "%s (Pokedex #%d)%n"
+                + "Generation: %d%n"
+                + "Type: %s%n"
+                + "Stats:%n"
+                + "  HP:              %d%n"
+                + "  Attack:          %d%n"
+                + "  Defense:         %d%n"
+                + "  Special Attack:  %d%n"
+                + "  Special Defense: %d%n"
+                + "  Speed:           %d%n"
+                + "  Total:           %d",
+                getName(), getId(), getGeneration(), types,
+                getHp(), getAttack(), getDefense(), getSpecialAttack(),
+                getSpecialDefense(), getSpeed(), getStatTotal());
+    }
+
+    /**
+     * This function returns the pokemon's Pokedex number and name
+     * @return - A formatted String containing the pokemon's Pokedex number and name
+     */
+    public String toPrintSimple() {
+        return "#" + getId() + " " + getName();
+    }
+
+    /**
+     * This function returns the pokemon's Pokedex number and name in a short format
+     * @return - A formatted String containing the pokemon's Pokedex number and name
+     */
+    public String toPrintShort() {
+        return toPrintSimple();
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon [getId()=" + getId() + ", getName()=" + getName() + ", getGeneration()=" + getGeneration()
+                + ", getPrimaryType()=" + getPrimaryType() + ", getSecondaryType()=" + getSecondaryType() + ", getHp()="
+                + getHp() + ", getAttack()=" + getAttack() + ", getDefense()=" + getDefense() + ", getSpecialAttack()="
+                + getSpecialAttack() + ", getSpecialDefense()=" + getSpecialDefense() + ", getSpeed()=" + getSpeed()
+                + ", getStatTotal()=" + getStatTotal() + "]";
+    }
+
+
 
 
     /// Getters & Setters ///
@@ -46,6 +103,14 @@ public class Pokemon {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public int getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(int generation) {
+        this.generation = generation;
     }
 
     public String getPrimaryType() {

@@ -1,3 +1,150 @@
+# Pokemon Search
+
+## 1. Project Description
+
+This project uses a SQLite database of Pokemon through Generation IX. Each Pokemon
+has a unique Pokedex number, name, generation, one or two types, six base stats,
+and a base stat total (BST).
+
+The program lets users explore the database through a repeating console menu.
+PokemonDriver reads the user's choices, DBAPI queries the database, and
+Pokemon formats the results for display. Users can search repeatedly before
+choosing to exit.
+
+The API can answer the following questions:
+
+- Which Pokemon have a particular primary or secondary type?
+- Which Pokemon come from a specified generation?
+- Which Pokemon matches a full name?
+- Which Pokemon has a specified Pokedex number?
+- Which Pokemon have a BST greater than a given value?
+- Which Pokemon have HP, Attack, Defense, Special Attack, Special Defense, or
+  Speed greater than a given value?
+
+Name, type, and stat-name searches ignore case. Threshold searches use a
+greater-than comparison, so Pokemon equal to the supplied value are excluded.
+
+## 2. Example Test Run
+
+```text
+Find Pokemon by:
+1. Type
+2. Generation
+3. Name
+4. Pokedex number
+5. Base stat total above a value
+6. Individual stat above a value
+0. Exit
+Choose an option: 6
+Enter a stat (HP, Attack, Defense, Special Attack, Special Defense, Speed): hp
+Find Pokemon with that stat greater than: 200
+
+Found 3 matching Pokemon:
+Chansey (Pokedex #113)
+Generation: 1
+Type: Normal
+Stats:
+  HP:              250
+  Attack:          5
+  Defense:         5
+  Special Attack:  35
+  Special Defense: 105
+  Speed:           50
+  Total:           450
+
+Blissey (Pokedex #242)
+Generation: 2
+Type: Normal
+Stats:
+  HP:              255
+  Attack:          10
+  Defense:         10
+  Special Attack:  75
+  Special Defense: 135
+  Speed:           55
+  Total:           540
+
+Guzzlord (Pokedex #799)
+Generation: 7
+Type: Dark / Dragon
+Stats:
+  HP:              223
+  Attack:          101
+  Defense:         53
+  Special Attack:  97
+  Special Defense: 53
+  Speed:           43
+  Total:           570
+
+
+Find Pokemon by:
+1. Type
+2. Generation
+3. Name
+4. Pokedex number
+5. Base stat total above a value
+6. Individual stat above a value
+0. Exit
+Choose an option: 3
+Enter the full Pokemon name: lucario
+
+Found 1 matching Pokemon:
+Lucario (Pokedex #448)
+Generation: 4
+Type: Fighting / Steel
+Stats:
+  HP:              70
+  Attack:          110
+  Defense:         70
+  Special Attack:  115
+  Special Defense: 70
+  Speed:           90
+  Total:           525
+
+
+Find Pokemon by:
+1. Type
+2. Generation
+3. Name
+4. Pokedex number
+5. Base stat total above a value
+6. Individual stat above a value
+0. Exit
+Choose an option: 5
+Find Pokemon with a base stat total greater than: 700
+
+Found 1 matching Pokemon:
+Arceus (Pokedex #493)
+Generation: 4
+Type: Normal
+Stats:
+  HP:              120
+  Attack:          120
+  Defense:         120
+  Special Attack:  120
+  Special Defense: 120
+  Speed:           120
+  Total:           720
+
+
+Find Pokemon by:
+1. Type
+2. Generation
+3. Name
+4. Pokedex number
+5. Base stat total above a value
+6. Individual stat above a value
+0. Exit
+Choose an option: 0
+Goodbye!
+```
+
+## 3. AI Usage Statement
+
+I used ChatGPT Codex to help write SQL queries and refactor repeated database query code into a single reusable function. I reviewed the generated code and tested the queries through the program’s menu to check that they returned the expected Pokémon.
+
+## Development Notes
+
 I used ChatGPT Codex within Visual Studio IDE to import and create a pokemon dataset. The dataset uses pokedex number as key, and includes the name of the pokemon, the type(s) of the pokemon, and the base stats and stat total of the pokemon for all exsting pokemon through generation IX. ChatGPT Codex also posted what operations it performed to the README.
 
 
